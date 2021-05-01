@@ -1,12 +1,12 @@
 {
-  "name": "hello_world",
+  "name": "chess_tea",
   "version": "1.0.0",
   "description": "This is a revery app.",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p hello_world,app,test",
+    "build": "refmterr dune build -p chess_tea,app,test",
     "install": [
-      "esy-installer hello_world.install",
+      "esy-installer chess_tea.install",
       "esy-installer test.install",
       "esy-installer app.install"
     ],
@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "app": "esy '@app' x hello_world_app",
+    "app": "esy '@app' x chess_tea_app",
     "test": "esy '@test' x test_exe"
   },
   "dependencies": {

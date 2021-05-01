@@ -1,4 +1,4 @@
-# `hello_world`
+# `chess_tea`
 
 This is a Revery app.
 
@@ -6,7 +6,7 @@ This is a Revery app.
 
 There are two convenience scripts to initialize this repo:
 
-- `scripts/rename hello_world my_library`
+- `scripts/rename chess_tea my_library`
   - This updates appropriate filenames and contents to use "my_library" as the name.
   - Arguments should be snake_case, they will be converted to other forms where appropriate.
 - `scripts/vscode`

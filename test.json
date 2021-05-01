@@ -1,7 +1,7 @@
 {
   "source": "./package.json",
   "override": {
-    "build": "refmterr dune build -p hello_world,test",
+    "build": "refmterr dune build -p chess_tea,test",
     "install": [
       "esy-installer test.install"
     ]

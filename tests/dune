@@ -6,7 +6,7 @@
   (libraries
     console.lib
     rely.lib
-    hello_world
+    chess_tea
   )
   (modules :standard \ TestExe)
 )

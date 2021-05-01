@@ -1,6 +1,6 @@
 (library
-  (name HelloWorld)
-  (public_name hello_world)
+  (name ChessTea)
+  (public_name chess_tea)
   (ocamlopt_flags -w -9-27)
   (ocamlc_flags -w -9-27)
   (preprocess (pps brisk-reconciler.ppx))
