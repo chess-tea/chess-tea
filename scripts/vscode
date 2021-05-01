@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# This will be the location of this script.
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+source "$DIR/bash_utils"
+
+function setup_vscode_settings() {
+  PROJECT_ROOT=$(absolute_path "$DIR/..")
+  VS_CODE_DIR="$PROJECT_ROOT/.vscode"
+  VS_CODE_SETTINGS="$VS_CODE_DIR/settings.json"
+
+  if [ -f "$VS_CODE_SETTINGS" ]; then
+    print_err "Settings file already exists: $VS_CODE_SETTINGS"
+    return 1
+  fi
+
+  echo "${BOLD}Creating VS Code Settings at:${RESET}"
+  echo ""
+  echo "  ${BOLD}${BLUE}$VS_CODE_SETTINGS${RESET}"
+  echo ""
+
+  prompt_continue
+
+  if [ ! -d "$VS_CODE_DIR" ]; then
+    mkdir "$VS_CODE_DIR"
+  fi
+
+  # Create the file with the project root.
+  cat > "$VS_CODE_SETTINGS" << EOM
+{
+  "ocaml.sandbox": {
+    "kind": "esy",
+    "root": "$PROJECT_ROOT"
+  }
+}
+EOM
+
+  echo "${GREEN}Done!${RESET}"
+  echo ""
+  echo "  - Install the OCaml Platform extension"
+  echo "  - Make sure to build with ${BOLD}esy && esy @test${RESET}"
+  echo "  - Then ${BOLD}restart VS Code${RESET} for Reason editor integrations"
+  echo ""
+};
+
+setup_vscode_settings "$@"

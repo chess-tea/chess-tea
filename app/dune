@@ -1,0 +1,10 @@
+(executable
+  (name HelloWorldApp)
+  (public_name hello_world_app)
+  (package app)
+  (ocamlopt_flags -g -w -9-27)
+  (ocamlc_flags -g -w -9-27)
+  (libraries hello_world)
+)
+
+(include_subdirs unqualified)

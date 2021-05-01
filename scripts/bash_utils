@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Setup colors, but only if terminal supports it.
+if [ "$TERM" == "nuclide" ] || [ "$TERM" == "vt102" ] || [ "$TERM" == "dumb" ]; then
+  BOLD=""
+  BLACK=""
+  RED=""
+  GREEN=""
+  YELLOW=""
+  BLUE=""
+  MAGENTA=""
+  CYAN=""
+  WHITE=""
+  RESET=""
+else
+  BOLD=`tput bold`
+  BLACK=`tput setaf 0`
+  RED=`tput setaf 1`
+  GREEN=`tput setaf 2`
+  YELLOW=`tput setaf 3`
+  BLUE=`tput setaf 4`
+  MAGENTA=`tput setaf 5`
+  CYAN=`tput setaf 6`
+  WHITE=`tput setaf 7`
+  RESET=`tput sgr0`
+fi
+
+# $1: Path that may be relative
+# Returns: Absolute path of $1
+function absolute_path() {
+  if [ -d "$1" ]; then
+    # dir
+    (cd "$1"; pwd)
+  elif [ -f "$1" ]; then
+    # file
+    if [[ $1 = /* ]]; then
+      echo "$1"
+    elif [[ $1 == */* ]]; then
+      echo "$(cd "${1%/*}"; pwd)/${1##*/}"
+    else
+      echo "$(pwd)/$1"
+    fi
+  fi
+}
+
+# Helper to print error messages.
+function print_err() {
+  >&2 echo "${RED}[Error]: $@${RESET}"
+}
+
+# Changes first argument to "TitleCase"
+# Examples:
+#   this is a test -> ThisIsATest
+#   this_is_a_test -> ThisIsATest
+#   this_is_A_test -> ThisIsATest
+#   this_IS_a_test -> ThisISATest
+#   this_IS_A_test -> ThisISATest
+function title_case() {
+  if [ -z "$1" ]; then
+    print_err "One argument required, the 'snake_case' name to convert to 'TitleCase'. No arguments were provided."
+    return 1
+  fi
+
+  if [ -n "$2" ]; then
+    print_err "One argument required, the 'snake_case' name to convert to 'TitleCase'. Too many arguments were provided."
+    return 1
+  fi
+
+  # https://unix.stackexchange.com/a/196291
+  SNAKE_CASE=$1
+  ARR=(${SNAKE_CASE//_/ })
+  printf %s "${ARR[@]^}"
+};
+
+# This will prompy a user to continue.
+# On yes nothing else happens, on no the entire program exits.
+function prompt_continue() {
+  while true; do
+    read -p "${BOLD}Continue? (y/n) ${RESET}" yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* )
+          echo "${RED}Exiting.${RESET}";
+          exit;;
+        * ) echo "${BLUE}Please answer yes or no.${RESET}";;
+    esac
+  done
+}

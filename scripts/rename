@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# This will be the location of this script.
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+source "$DIR/bash_utils"
+
+# Gets all the relevant, non .gitignored files. This does not consider
+# untracked files. Make sure git status is clean.
+function relevant_files() {
+  # Part of https://stackoverflow.com/a/39064584
+  # Plus some extra filtering with 'grep -v'
+  ( git ls-files ) \
+    | sort -u \
+    | ( xargs -d '\n' -- stat -c%n 2>/dev/null  ||: ) \
+    | grep -v 'esy.lock' \
+    | grep -v '__snapshots__'
+}
+
+function rename_template() {
+  if [ -z "$1" ]; then
+    print_err "Two arguments required, the 'old_name' and the 'new_name'. No arguments were provided."
+    return 1
+  fi
+
+  if [ -z "$2" ]; then
+    print_err "Two arguments required, the 'old_name' and the 'new_name'. One argument was provided."
+    return 1
+  fi
+
+  if [ -n "$3" ]; then
+    print_err "Two arguments required, the 'old_name' and the 'new_name'. Too many arguments were provided."
+    return 1
+  fi
+
+  # https://unix.stackexchange.com/a/155077
+  if [ -z "$(git status --porcelain)" ]; then
+    # Working directory clean
+    :
+  else
+    # Uncommitted changes
+    print_err "There are uncommitted changes. Commit or stash them before running this script."
+    return 1
+  fi
+
+  # Check that rename is installed.
+  if command -v rename > /dev/null; then
+    :
+  else
+    print_err "Install the \"rename\" command before running this script (Check by running 'command -v rename')"
+    return 1
+  fi
+
+  OLD_SNAKE_CASE=$1
+  NEW_SNAKE_CASE=$2
+  OLD_TITLE_CASE=$(title_case $OLD_SNAKE_CASE)
+  NEW_TITLE_CASE=$(title_case $NEW_SNAKE_CASE)
+
+  echo "${BOLD}Renaming:${RESET}"
+  echo ""
+  echo "  ${BOLD}${RED}$OLD_SNAKE_CASE${RESET} (${RED}$OLD_TITLE_CASE${RESET})"
+  echo ""
+  echo "    to"
+  echo ""
+  echo "  ${BOLD}${GREEN}$NEW_SNAKE_CASE${RESET} (${GREEN}$NEW_TITLE_CASE${RESET})"
+  echo ""
+
+  prompt_continue
+
+  relevant_files | while read x; do
+    sed -i "s/$OLD_SNAKE_CASE/$NEW_SNAKE_CASE/g" "$x"
+    sed -i "s/$OLD_TITLE_CASE/$NEW_TITLE_CASE/g" "$x"
+    rename "s/$OLD_SNAKE_CASE/$NEW_SNAKE_CASE/g" "$x"
+    rename "s/$OLD_TITLE_CASE/$NEW_TITLE_CASE/g" "$x"
+  done
+
+  echo "${GREEN}Done!${RESET}"
+  echo ""
+  echo "  - Rebuild with ${BOLD}esy && esy @app && esy @test${RESET}"
+  echo "  - Run app with ${BOLD}esy app${RESET}"
+  echo "  - Update tests with ${BOLD}esy test -u${RESET}"
+  echo "  - Check the changes, then commit if everything looks good"
+  echo ""
+};
+
+rename_template "$@"

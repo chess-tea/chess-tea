@@ -1,0 +1,44 @@
+{
+  "name": "hello_world",
+  "version": "1.0.0",
+  "description": "This is a revery app.",
+  "license": "MIT",
+  "esy": {
+    "build": "refmterr dune build -p hello_world,app,test",
+    "install": [
+      "esy-installer hello_world.install",
+      "esy-installer test.install",
+      "esy-installer app.install"
+    ],
+    "exportedEnv": {
+      "OCAMLRUNPARAM": {
+        "val": "b",
+        "scope": "global"
+      },
+      "RELY_ROOT_DIR": {
+        "val": "#{self.root}"
+      }
+    }
+  },
+  "scripts": {
+    "app": "esy '@app' x hello_world_app",
+    "test": "esy '@test' x test_exe"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
+    "@opam/dune": ">=2.6",
+    "@reason-native/console": "^0.1.0",
+    "ocaml": "~4.10",
+    "revery": "revery-ui/revery",
+    "refmterr": "*"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
+    "@reason-native/rely": "*"
+  },
+  "resolutions": {
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#bd6e4933",
+    "@revery/esy-harfbuzz": "github:kyldvs/esy-harfbuzz#f43deb1"
+  }
+}
