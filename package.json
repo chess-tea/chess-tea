@@ -4,7 +4,7 @@
   "description": "This is a revery app.",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p chess_tea,app,test",
+    "build": "dune build -p chess_tea,app,test",
     "install": [
       "esy-installer chess_tea.install",
       "esy-installer test.install",
@@ -25,20 +25,19 @@
     "test": "esy '@test' x test_exe"
   },
   "dependencies": {
-    "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
+    "@esy-ocaml/reason": "^3.6.2",
     "@opam/dune": ">=2.6",
     "@reason-native/console": "^0.1.0",
-    "ocaml": "~4.10",
-    "revery": "revery-ui/revery",
-    "refmterr": "*"
+    "revery": "revery-ui/revery#2844083"
   },
   "devDependencies": {
+    "ocaml": "4.12.x",
     "@opam/merlin": "*",
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
+    "@opam/ocaml-lsp-server": "*",
     "@reason-native/rely": "*"
   },
   "resolutions": {
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam#bd6e4933",
+    "@esy-ocaml/reason": "EduardoRFS/reason:reason.json#35aa4df3de0daa60bdc1133dcf97855decac48f7",
     "@revery/esy-harfbuzz": "github:kyldvs/esy-harfbuzz#f43deb1"
   }
 }
